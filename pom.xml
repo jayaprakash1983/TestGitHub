@@ -28,18 +28,12 @@ under the License.
     <version>3.6.3</version>
   </parent>
 
-  <artifactId>maven-core</artifactId>
+  <artifactId>maven-embedder</artifactId>
 
-  <name>Maven Core</name>
-  <description>Maven Core classes.</description>
+  <name>Maven Embedder</name>
+  <description>Maven embeddable component, with CLI and logging support.</description>
 
   <dependencies>
-    <!--  Maven -->
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-model</artifactId>
-    </dependency>
-    <!-- Remove the following two deps to see how to remove Settings from the core -->
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-settings</artifactId>
@@ -50,15 +44,7 @@ under the License.
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-builder-support</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-repository-metadata</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-artifact</artifactId>
+      <artifactId>maven-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -66,23 +52,19 @@ under the License.
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
+      <artifactId>maven-model</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven</groupId>
       <artifactId>maven-model-builder</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
-      <artifactId>maven-resolver-provider</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.resolver</groupId>
-      <artifactId>maven-resolver-impl</artifactId>
+      <artifactId>maven-builder-support</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.resolver</groupId>
       <artifactId>maven-resolver-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.maven.resolver</groupId>
-      <artifactId>maven-resolver-spi</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.resolver</groupId>
@@ -93,23 +75,45 @@ under the License.
       <artifactId>maven-shared-utils</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.eclipse.sisu</groupId>
-      <artifactId>org.eclipse.sisu.plexus</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.sisu</groupId>
-      <artifactId>org.eclipse.sisu.inject</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.inject</groupId>
-      <artifactId>guice</artifactId>
-      <classifier>no_aop</classifier>
-    </dependency>
+       <groupId>com.google.inject</groupId>
+       <artifactId>guice</artifactId>
+       <classifier>no_aop</classifier>
+       <exclusions>
+         <exclusion>
+           <groupId>aopalliance</groupId>
+           <artifactId>aopalliance</artifactId>
+         </exclusion>
+         <!-- MNG-6549 remove unused transitive dependencies of Guava, that is a dependency of Guice -->
+         <exclusion>
+           <groupId>com.google.code.findbugs</groupId>
+           <artifactId>jsr305</artifactId>
+         </exclusion>
+         <exclusion>
+           <groupId>org.checkerframework</groupId>
+           <artifactId>checker-compat-qual</artifactId>
+         </exclusion>
+         <exclusion>
+           <groupId>com.google.errorprone</groupId>
+           <artifactId>error_prone_annotations</artifactId>
+         </exclusion>
+         <exclusion>
+           <groupId>com.google.j2objc</groupId>
+           <artifactId>j2objc-annotations</artifactId>
+         </exclusion>
+         <exclusion>
+           <groupId>org.codehaus.mojo</groupId>
+           <artifactId>animal-sniffer-annotations</artifactId>
+         </exclusion>
+       </exclusions>
+     </dependency>
     <dependency>
       <groupId>javax.inject</groupId>
       <artifactId>javax.inject</artifactId>
     </dependency>
-    <!-- Plexus -->
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>jsr250-api</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-utils</artifactId>
@@ -119,17 +123,39 @@ under the License.
       <artifactId>plexus-classworlds</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.plexus</groupId>
-      <artifactId>plexus-component-annotations</artifactId>
+      <groupId>org.eclipse.sisu</groupId>
+      <artifactId>org.eclipse.sisu.plexus</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.plexus</groupId>
+      <artifactId>plexus-sec-dispatcher</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.sonatype.plexus</groupId>
+      <artifactId>plexus-cipher</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <!-- CLI -->
+    <dependency>
+      <groupId>commons-cli</groupId>
+      <artifactId>commons-cli</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-jxpath</groupId>
-      <artifactId>commons-jxpath</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
@@ -137,8 +163,8 @@ under the License.
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-library</artifactId>
+      <groupId>org.fusesource.jansi</groupId>
+      <artifactId>jansi</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -157,45 +183,16 @@ under the License.
           <artifactId>apache-rat-plugin</artifactId>
           <configuration>
             <excludes combine.children="append">
-              <exclude>lifecycle-executor.txt</exclude>
-              <exclude>plugin-manager.txt</exclude>
-              <exclude>project-builder.txt</exclude>
-              <exclude>src/site/resources/design/**</exclude>
+              <exclude>src/main/resources/META-INF/MANIFEST.MF</exclude>
+              <exclude>src/test/*-projects/**</exclude>
+              <exclude>src/test/*-project/**</exclude>
+              <exclude>src/test/plugin-version-references/**</exclude>
             </excludes>
-          </configuration>
-        </plugin>
-        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-        <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
-          <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>buildnumber-maven-plugin</artifactId>
-                    <versionRange>[1.2,)</versionRange>
-                    <goals>
-                      <goal>create-timestamp</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore />
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
           </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-component-metadata</artifactId>
-      </plugin>
       <plugin>
         <groupId>org.eclipse.sisu</groupId>
         <artifactId>sisu-maven-plugin</artifactId>
@@ -204,53 +201,11 @@ under the License.
         <groupId>org.codehaus.modello</groupId>
         <artifactId>modello-maven-plugin</artifactId>
         <configuration>
-          <version>1.1.0</version>
+          <version>1.0.0</version>
           <models>
-            <model>src/main/mdo/toolchains.mdo</model>
+            <model>src/main/mdo/core-extensions.mdo</model>
           </models>
         </configuration>
-        <executions>
-          <execution>
-            <id>modello-site-doc</id>
-            <phase>pre-site</phase>
-            <goals>
-              <goal>xdoc</goal>
-            </goals>
-            <configuration>
-              <version>1.0.0</version>
-              <models>
-                <model>src/main/mdo/extension.mdo</model>
-              </models>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>create-noncanonicalrev</id>
-            <goals>
-              <goal>create-timestamp</goal>
-            </goals>
-            <configuration>
-              <timestampFormat>'NON-CANONICAL_'yyyy-MM-dd'T'HH:mm:ssXXX_'${user.name}'</timestampFormat>
-              <timestampPropertyName>nonCanonicalRevision</timestampPropertyName>
-            </configuration>
-          </execution>
-          <execution>
-            <id>create-buildnumber</id>
-            <goals>
-              <goal>create</goal>
-            </goals>
-            <configuration>
-              <doCheck>false</doCheck>
-              <doUpdate>false</doUpdate>
-              <revisionOnScmFailure>${nonCanonicalRevision}</revisionOnScmFailure>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
